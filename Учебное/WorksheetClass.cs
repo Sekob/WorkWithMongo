@@ -1,5 +1,6 @@
 ﻿using MongoDB.Bson;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Xml.Serialization;
 
@@ -34,13 +35,13 @@ namespace UpdateDb
         [XmlElement("v")]
         public string Value;      
     }
-    
+
     public class EOData
     {
-        [XmlElement(ElementName ="c",Order = 1)]
-        public string _id { get; set; }
+        [XmlElement(ElementName = "c", Order = 1)]
+        public string Short_Id { get; set; }
         [XmlElement(ElementName = "c", Order = 2)]
-        public string Long_ID { get; set; }
+        public string _id { get; set; }
         [XmlElement(ElementName = "c", Order = 3)]
         public string Name { get; set; }
         [XmlElement(ElementName = "c", Order = 4)]
@@ -86,6 +87,20 @@ namespace UpdateDb
                    $"С: {this.DateStart}{Environment.NewLine}" +
                    $"По: {this.DateEnd}{Environment.NewLine}" +
                    $"Тип: {this.Type}{Environment.NewLine}";
+        }
+
+        public override bool Equals(object obj)
+        {
+            var x = obj as EOData;
+            if (obj == null)
+                return false;
+            if (x == null)
+                return false;
+            if (this.Accountent != x.Accountent || this.Agent != x.Agent || this.DateEnd != x.DateEnd
+                || this.DateStart != x.DateStart || this.Email != x.Email || this.ES != x.ES || this.INN != x.INN
+                || this.LastUpdate != x.LastUpdate || this.Mobile != x.Mobile || this.Name != x.Name || this.Notification != x.Notification
+                || this.Partner != x.Partner || this.PFR != x.PFR || this.Short_Id != x.Short_Id || this.Type != x.Type || this._id != x._id) return false;
+            return true; 
         }
     }
 }

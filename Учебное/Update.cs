@@ -122,27 +122,27 @@ namespace UpdateDb
         //TODO разобраться с возвратом
         public async Task<bool> GetDataFromServer()
         {
-            //Working part that gets cookie and html documetn from web
-            var cookie = await GetCookiesAsync("http://bo-otchet.1gl.ru/Account/Login", _loginName, _loginPwd);
+            ////Working part that gets cookie and html documetn from web
+            //var cookie = await GetCookiesAsync("http://bo-otchet.1gl.ru/Account/Login", _loginName, _loginPwd);
             
 
-            //Getting data from web by WebClient
-            using (var client = new CookieAwareWebClient(cookie))
-            {
-                Uri newUri = new Uri("http://bo-otchet.1gl.ru/Registration/RepostRegistrationExcel?Caption=%D0%A1%20%D0%B2%D1%8B%D0%BF%D1%83%D1%89%D0%B5%D0%BD%D0%BD%D0%BE%D0%B9%20%D0%9A%D0%AD%D0%9F&ShowSearchForm=False&PageId=0&PageSize=50&SuppressFlags=0&ViewId=HaveCertificate&PartnerId="+PartnerId);
-                client.DownloadFile (newUri, $"{_partnerId}.xlsx");
-                using (ZipFile zip = ZipFile.Read($"{_partnerId}.xlsx"))
-                {
-                    if (zip == null) Console.WriteLine("Null");
-                    else
-                    {
-                        foreach (var zp in zip)
-                        {
-                            zp.Extract(ExtractExistingFileAction.OverwriteSilently);
-                        }
-                    }
-                }
-            }
+            ////Getting data from web by WebClient
+            //using (var client = new CookieAwareWebClient(cookie))
+            //{
+            //    Uri newUri = new Uri("http://bo-otchet.1gl.ru/Registration/RepostRegistrationExcel?Caption=%D0%A1%20%D0%B2%D1%8B%D0%BF%D1%83%D1%89%D0%B5%D0%BD%D0%BD%D0%BE%D0%B9%20%D0%9A%D0%AD%D0%9F&ShowSearchForm=False&PageId=0&PageSize=50&SuppressFlags=0&ViewId=HaveCertificate&PartnerId="+PartnerId);
+            //    client.DownloadFile (newUri, $"{_partnerId}.xlsx");
+            //    using (ZipFile zip = ZipFile.Read($"{_partnerId}.xlsx"))
+            //    {
+            //        if (zip == null) Console.WriteLine("Null");
+            //        else
+            //        {
+            //            foreach (var zp in zip)
+            //            {
+            //                zp.Extract(ExtractExistingFileAction.OverwriteSilently);
+            //            }
+            //        }
+            //    }
+            //}
             try
             {
                 XmlDocument _xml = new XmlDocument();
@@ -172,8 +172,8 @@ namespace UpdateDb
                 return false;
             }
          }
-
-        public async Task<List<EOData>> GetUpdataDb()
+        //TODO обработать ошибки
+        public async Task<List<EOData>> AddEoClientsDb()
         {
             List < EOData > dataResult = new List<EOData>();
             var dataContext = new DataContext();
@@ -199,6 +199,51 @@ namespace UpdateDb
                 }
             }
             return dataResult;
+        }
+        //TODO обработать ошибки
+        public async Task<List<EOData>> CheckAndUpdateForClients()
+        {
+            List<EOData> updatedData = new List<EOData>();
+            object _lock = new object();
+            var dataContext = new DataContext();
+            var result = await dataContext.EoClients.Find(x => true).ToListAsync();
+            Parallel.ForEach(Data.Rows, item => {
+                foreach (var itm in result)
+                {
+                    if (itm._id==item._id)
+                    {
+                        if (!itm.Equals(item))
+                        {
+                            lock (_lock)
+                            {
+                                dataContext.EoClients.ReplaceOne<EOData>((x) => x._id == itm._id, item);
+                                updatedData.Add(item);
+                            }
+                        }
+                    }
+                }
+            });
+            return updatedData;
+        }
+        //TODO обработать ошибки
+        public async Task<List<EOData>> CheckUpdateForClients()
+        {
+            List<EOData> updatedData = new List<EOData>();
+            object _lock = new object();
+            var dataContext = new DataContext();
+            var result = await dataContext.EoClients.Find(x => true).ToListAsync();
+            Parallel.ForEach(Data.Rows, item => {
+                foreach (var itm in result)
+                {
+                    if (itm._id == item._id)
+                    {
+                        if (!itm.Equals(item))
+                            lock (_lock)
+                                updatedData.Add(item);
+                    }
+                }
+            });
+            return updatedData;
         }
 
         static void Main (string[] args)
