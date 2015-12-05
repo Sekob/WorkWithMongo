@@ -1,7 +1,9 @@
-﻿using System;
+﻿using MongoDB.Bson;
+using System;
+using System.Collections.Generic;
 using System.Xml.Serialization;
 
-namespace Учебное
+namespace UpdateDb
 {
     public class sst
     {
@@ -14,12 +16,12 @@ namespace Учебное
         public string t { get; set; }
     }
 
-    [XmlRoot(Namespace = "")]
-    public class worksheet
+    [XmlRoot(Namespace = "http://schemas.openxmlformats.org/spreadsheetml/2006/main")]
+    public class Worksheet
     {
         [XmlArray("sheetData")]
         [XmlArrayItem("row")]
-        public Row[] Rows;
+        public List<EOData> Rows;
     }
 
     public class Row
@@ -32,28 +34,44 @@ namespace Учебное
         [XmlElement("v")]
         public string Value;      
     }
-
+    
     public class EOData
     {
-        public string ID { get; set; }
+        [XmlElement(ElementName ="c",Order = 1)]
+        public string _id { get; set; }
+        [XmlElement(ElementName = "c", Order = 2)]
         public string Long_ID { get; set; }
+        [XmlElement(ElementName = "c", Order = 3)]
         public string Name { get; set; }
+        [XmlElement(ElementName = "c", Order = 4)]
         public string INN { get; set; }
+        [XmlElement(ElementName = "c", Order = 5)]
         public string Agent { get; set; }
+        [XmlElement(ElementName = "c", Order = 6)]
         public string Accountent { get; set; }
+        [XmlElement(ElementName = "c", Order = 7)]
         public string Email { get; set; }
+        [XmlElement(ElementName = "c", Order = 8)]
         public string Mobile { get; set; }
+        [XmlElement(ElementName = "c", Order = 9)]
         public string ES { get; set; }
+        [XmlElement(ElementName = "c", Order = 10)]
         public string PFR { get; set; }
+        [XmlElement(ElementName = "c", Order = 11)]
         public string Notification { get; set; }
+        [XmlElement(ElementName = "c", Order = 12)]
         public string Partner { get; set; }
+        [XmlElement(ElementName = "c", Order = 13)]
         public string LastUpdate { get; set; }
+        [XmlElement(ElementName = "c", Order = 14)]
         public string DateStart { get; set; }
+        [XmlElement(ElementName = "c", Order = 15)]
         public string DateEnd { get; set; }
+        [XmlElement(ElementName = "c", Order = 16)]
         public string Type { get; set; }
         public string Print()
         {
-            return $"ID: {this.ID}{Environment.NewLine}" +
+            return $"ID: {this._id}{Environment.NewLine}" +
                    $"Наименование: {this.Name}{Environment.NewLine}" +
                    $"ИНН: {this.INN}{Environment.NewLine}" +
                    $"Представитель: {this.Agent}{Environment.NewLine}" +
