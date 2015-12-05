@@ -15,9 +15,23 @@ namespace Test
             if (firstPartner.GetDataFromServer().GetAwaiter().GetResult())
                 if (firstPartner.Data != null)
                 {
-                    var result = firstPartner.GetUpdataDb().GetAwaiter().GetResult();
+                    var addResult = firstPartner.AddEoClientsDb().GetAwaiter().GetResult();
                     Console.WriteLine("База обновленна!");
-                    Console.WriteLine($"Колличество добавленных записей: {result.Count}");
+                    Console.WriteLine($"Колличество добавленных записей: {addResult.Count}");
+                    var updateResult = firstPartner.CheckUpdateForClients().GetAwaiter().GetResult();
+                    if (updateResult.Count!=0)
+                    {
+                        Console.WriteLine($"Количество записей нуждающихся в обновлении: {updateResult.Count}");
+                        foreach (var item in updateResult)
+                        {
+                            Console.WriteLine("Обновленная запись:");
+                            Console.WriteLine(item.Print());
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Записи не нуждаются в обновлении!");
+                    }
                 }
                 else
                     Console.WriteLine("Ничего не скачали :(");
