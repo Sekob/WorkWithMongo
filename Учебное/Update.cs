@@ -128,11 +128,11 @@ namespace UpdateDb
         //Подключается к серверу, скачевает xlsx фаил, разархивируетв в xml и десереализует/
         public async Task<bool> GetDataFromServer()
         {
-            ////Working part that gets cookie and html documetn from web
+            //Рабочая часть, соединяемся с сервером и получаем куки
             var cookie = await GetCookiesAsync("http://bo-otchet.1gl.ru/Account/Login", _loginName, _loginPwd);
 
 
-            //Getting data from web by WebClient
+            //Получаем данные с помошью WebClient
             using (var client = new CookieAwareWebClient(cookie))
             {
                 Uri newUri = new Uri("http://bo-otchet.1gl.ru/Registration/RepostRegistrationExcel?Caption=%D0%A1%20%D0%B2%D1%8B%D0%BF%D1%83%D1%89%D0%B5%D0%BD%D0%BD%D0%BE%D0%B9%20%D0%9A%D0%AD%D0%9F&ShowSearchForm=False&PageId=0&PageSize=50&SuppressFlags=0&ViewId=HaveCertificate&PartnerId=" + PartnerId);
