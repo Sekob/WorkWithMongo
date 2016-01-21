@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using MongoDB.Driver;
 using MongoDB.Bson;
 using Ionic.Zip;
+using System.Threading;
 
 namespace UpdateDb
 {
@@ -123,7 +124,7 @@ namespace UpdateDb
             _partnerId = "118";
         }
 
-        //TODO разобраться с возвратом
+        //TODO: разобраться с возвратом
         //Подключается к серверу, скачевает xlsx фаил, разархивируетв в xml и десереализует/
         public async Task<bool> GetDataFromServer()
         {
@@ -178,7 +179,8 @@ namespace UpdateDb
                 return false;
             }
         }
-        //TODO обработать ошибки
+
+        //TODO: обработать ошибки
         public async Task<List<EOData>> AddEoClientsDb()
         {
             if (Data == null) throw new Exception($"Ошибка: GetDataFromServer(): Данные с сервера не были получены!\nИнициализируйте GetDataFromServer()");
@@ -207,7 +209,7 @@ namespace UpdateDb
             }
             return dataResult;
         }
-        //TODO обработать ошибки
+        //TODO: обработать ошибки
         public async Task<List<EOData>> CheckAndUpdateForClients()
         {
             if (Data == null) throw new Exception($"Ошибка: CheckAndUpdateForClients(): Данные с сервера не были получены!\nИнициализируйте GetDataFromServer()");
@@ -250,7 +252,7 @@ namespace UpdateDb
             });
             return updatedData;
         }
-        //TODO обработать ошибки
+        //TODO: обработать ошибки
         public async Task<List<EOData>> CheckUpdateForClients()
         {
             if (Data == null) throw new Exception($"Ошибка: CheckUpdateForClients(): Данные с сервера не были получены!\nИнициализируйте GetDataFromServer()");
