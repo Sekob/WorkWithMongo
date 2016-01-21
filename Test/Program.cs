@@ -8,6 +8,7 @@ using System.Diagnostics;
 
 namespace Test
 {
+
     class Program
     {
         static Timer task_timer;
